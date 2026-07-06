@@ -1,0 +1,36 @@
+{
+  "name": "heima-accounting",
+  "version": "1.0.0",
+  "description": "黑马记账 - 跨平台桌面记账应用",
+  "main": "./out/main/index.js",
+  "author": "黑马记账",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "cross-env ELECTRON_RUN_AS_NODE= electron-vite build",
+    "preview": "cross-env ELECTRON_RUN_AS_NODE= electron-vite preview",
+    "package:win": "cross-env ELECTRON_RUN_AS_NODE= CSC_IDENTITY_AUTO_DISCOVERY=false electron-vite build && electron-builder --win",
+    "package:mac": "cross-env ELECTRON_RUN_AS_NODE= CSC_IDENTITY_AUTO_DISCOVERY=false electron-vite build && electron-builder --mac",
+    "package:all": "cross-env ELECTRON_RUN_AS_NODE= CSC_IDENTITY_AUTO_DISCOVERY=false electron-vite build && electron-builder --win --mac"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "recharts": "^2.13.0",
+    "sql.js": "^1.11.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "cross-env": "^10.1.0",
+    "electron": "^25.9.8",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^2.3.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "^5.7.2"
+  }
+}

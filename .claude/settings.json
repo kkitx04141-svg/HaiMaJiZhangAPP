@@ -1,0 +1,49 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm ping *)",
+      "Bash(npm install *)",
+      "Bash(rm -rf node_modules)",
+      "Bash(export ELECTRON_MIRROR=\"https://npmmirror.com/mirrors/electron/\")",
+      "Bash(cmd.exe /c \"rmdir /s /q node_modules 2>nul & rmdir /s /q node_modules 2>nul\")",
+      "Bash(npx rimraf *)",
+      "Bash(taskkill //f //im node.exe)",
+      "Bash(npm run *)",
+      "Bash(mv electron/main.ts src/main/index.ts)",
+      "Bash(mv electron/preload.ts src/preload/index.ts)",
+      "Bash(mv src/index.html src/renderer/index.html)",
+      "Bash(mv src/main.tsx src/renderer/main.tsx)",
+      "Bash(mv src/App.tsx src/renderer/App.tsx)",
+      "Bash(rmdir electron *)",
+      "Bash(rmdir src/assets)",
+      "Bash(rmdir src/constants)",
+      "Bash(npx electron *)",
+      "Bash(node -e \"console.log\\(require\\('electron/package.json'\\).version\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(./node_modules/.bin/electron -e \"const { app } = require\\('electron'\\); console.log\\('app:', typeof app\\); console.log\\('whenReady:', typeof app.whenReady\\); app.whenReady\\(\\).then\\(\\(\\) => { console.log\\('SUCCESS: Electron app ready!'\\); app.quit\\(\\); }\\);\")",
+      "Bash(./node_modules/.bin/electron -e \"const e = require\\('electron'\\); console.log\\('keys:', Object.keys\\(e\\)\\); console.log\\('electron:', typeof e\\);\")",
+      "Bash(./node_modules/electron/dist/electron.exe test-electron.js)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/electron/package.json'\\); console.log\\('main:', pkg.main\\); console.log\\('exports:', JSON.stringify\\(pkg.exports, null, 2\\)\\)\")",
+      "Bash(npx create-electron-vite@latest temp-scaffold --template react-ts)",
+      "Bash(rm -rf node_modules package-lock.json)",
+      "WebSearch",
+      "Bash(npm uninstall *)",
+      "Bash(export ELECTRON_MIRROR=\"https://registry.npmmirror.com/-/binary/electron/\")",
+      "Bash(npx asar *)",
+      "Read(//tmp/default_app/**)",
+      "Bash(cd \"d:\\\\Vibe Coding\\\\HeiMa-JiZhangApp\" && rm -rf _test.* node_modules package-lock.json out 2>/dev/null && echo \"已清理\")",
+      "Bash(npx create-electron-vite@0.3.0 electron-test-app -- --template react-ts)",
+      "Bash(npx @quick-start/create-electron@latest electron-test-app -- --template react-ts)",
+      "Bash(export ELECTRON_MIRROR=\"https://github.com/electron/electron/releases/download/\")",
+      "WebFetch(domain:github.com)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(du -sh node_modules/electron/dist/electron.exe)",
+      "Bash(file node_modules/electron/dist/electron.exe)",
+      "Bash(ls -la node_modules/electron/dist/electron.exe)"
+    ],
+    "additionalDirectories": [
+      "D:\\Vibe Coding\\HeiMa-JiZhangApp"
+    ]
+  }
+}
