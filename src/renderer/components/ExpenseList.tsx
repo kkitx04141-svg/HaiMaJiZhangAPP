@@ -12,7 +12,7 @@
 import { useState } from 'react'
 import { centsToYuan } from '@/utils/formatMoney'
 import { getDateLabel } from '@/utils/formatDate'
-import { getRecordIcon } from '@/constants/categories'
+import { useCategories } from '@/hooks/useCategories'
 import type { ExpenseRecord } from '@/db/expenseRepo'
 
 interface ExpenseListProps {
@@ -25,6 +25,7 @@ interface ExpenseListProps {
 }
 
 export default function ExpenseList({ expenses, loading, onDelete }: ExpenseListProps) {
+  const { getRecordIcon } = useCategories()
   const [confirmingId, setConfirmingId] = useState<number | null>(null)
 
   const grouped = groupByDate(expenses)

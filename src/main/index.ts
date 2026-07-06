@@ -63,7 +63,132 @@ async function initDatabase(): Promise<void> {
     )
   `)
 
+  // ---------- 分类表 ----------
+  db.run(`
+    CREATE TABLE IF NOT EXISTS categories (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      icon TEXT NOT NULL DEFAULT '💰',
+      parent_id INTEGER,
+      type TEXT NOT NULL CHECK(type IN ('expense', 'income')),
+      is_preset INTEGER NOT NULL DEFAULT 0,
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
+      FOREIGN KEY (parent_id) REFERENCES categories(id)
+    )
+  `)
+
+  // 首次启动时插入预置分类种子数据
+  const countResult = db.exec("SELECT COUNT(*) as cnt FROM categories")
+  const categoryCount = countResult[0]?.values[0]?.[0] ?? 0
+  if (categoryCount === 0) {
+    seedPresetCategories()
+  }
+
   await saveDatabase()
+}
+
+/** 首次启动时插入预置分类种子数据 */
+function seedPresetCategories(): void {
+  // 支出大类及其下属小类
+  const expensePresets: Array<{ name: string; icon: string; subs: Array<{ name: string; icon: string }> }> = [
+    {
+      name: '餐饮饮食', icon: '🍜',
+      subs: [
+        { name: '早餐', icon: '🥐' }, { name: '午餐', icon: '🍱' }, { name: '晚餐', icon: '🍲' },
+        { name: '零食水果', icon: '🍎' }, { name: '聚餐请客', icon: '🥂' }, { name: '饮品咖啡', icon: '☕' },
+      ],
+    },
+    {
+      name: '交通出行', icon: '🚗',
+      subs: [
+        { name: '公共交通', icon: '🚌' }, { name: '打车网约车', icon: '🚕' }, { name: '加油充电', icon: '⛽' },
+        { name: '停车过路费', icon: '🅿️' }, { name: '火车飞机', icon: '✈️' },
+      ],
+    },
+    {
+      name: '购物消费', icon: '🛒',
+      subs: [
+        { name: '服饰鞋包', icon: '👗' }, { name: '数码电器', icon: '📱' }, { name: '日用品', icon: '🧴' },
+        { name: '家居装饰', icon: '🛋️' }, { name: '美妆护肤', icon: '💄' },
+      ],
+    },
+    {
+      name: '住房居住', icon: '🏠',
+      subs: [
+        { name: '房租', icon: '🔑' }, { name: '房贷', icon: '🏦' }, { name: '水电燃气', icon: '💡' },
+        { name: '物业费', icon: '🏢' }, { name: '维修维护', icon: '🔧' }, { name: '网费话费', icon: '📶' },
+      ],
+    },
+    {
+      name: '健康医疗', icon: '💊',
+      subs: [
+        { name: '看病就医', icon: '🏥' }, { name: '药品', icon: '💉' }, { name: '体检保健', icon: '🩺' },
+        { name: '牙科眼科', icon: '🦷' }, { name: '运动健身', icon: '🏃' },
+      ],
+    },
+    {
+      name: '文教娱乐', icon: '🎮',
+      subs: [
+        { name: '学习进修', icon: '📚' }, { name: '电影演出', icon: '🎬' }, { name: '游戏充值', icon: '🎮' },
+        { name: '旅游度假', icon: '🏖️' }, { name: '宠物开销', icon: '🐾' }, { name: '兴趣爱好', icon: '🎨' },
+      ],
+    },
+    {
+      name: '人情社交', icon: '🎁',
+      subs: [
+        { name: '红包礼金', icon: '🧧' }, { name: '礼物赠送', icon: '🎀' }, { name: '孝敬长辈', icon: '👴' },
+        { name: '慈善捐款', icon: '🤝' },
+      ],
+    },
+    {
+      name: '其他支出', icon: '📦',
+      subs: [
+        { name: '金融服务', icon: '💳' }, { name: '快递邮政', icon: '📮' }, { name: '税费', icon: '🧾' },
+        { name: '其他杂项', icon: '❓' },
+      ],
+    },
+  ]
+
+  let sortOrder = 0
+  for (const main of expensePresets) {
+    sortOrder++
+    db.run(
+      `INSERT INTO categories (name, icon, parent_id, type, is_preset, sort_order) VALUES (?, ?, NULL, 'expense', 1, ?)`,
+      [main.name, main.icon, sortOrder]
+    )
+    // 拿到刚插入的大类 id，作为子类的 parent_id
+    const rowidResult = db.exec('SELECT last_insert_rowid() as id')
+    const parentId = Number(rowidResult[0]?.values[0]?.[0])
+
+    let subOrder = 0
+    for (const sub of main.subs) {
+      subOrder++
+      db.run(
+        `INSERT INTO categories (name, icon, parent_id, type, is_preset, sort_order) VALUES (?, ?, ?, 'expense', 1, ?)`,
+        [sub.name, sub.icon, parentId, subOrder]
+      )
+    }
+  }
+
+  // 收入分类（扁平，没有二级）
+  const incomePresets = [
+    { name: '工资薪水', icon: '💰' },
+    { name: '奖金红包', icon: '🎁' },
+    { name: '投资理财', icon: '📈' },
+    { name: '兼职副业', icon: '💼' },
+    { name: '其他收入', icon: '📦' },
+  ]
+
+  sortOrder = 0
+  for (const inc of incomePresets) {
+    sortOrder++
+    db.run(
+      `INSERT INTO categories (name, icon, parent_id, type, is_preset, sort_order) VALUES (?, ?, NULL, 'income', 1, ?)`,
+      [inc.name, inc.icon, sortOrder]
+    )
+  }
 }
 
 // ---------- IPC 处理器 ----------

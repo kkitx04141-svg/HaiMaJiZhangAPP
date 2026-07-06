@@ -1,8 +1,12 @@
 /**
- * 消费分类体系
+ * 消费分类体系 —— 预置种子数据
  *
  * 结构：一级大类 → 二级小类
  * 共 8 个一级大类，40 个二级小类
+ *
+ * ⚠️ 分类数据已迁移到数据库（categories 表），运行时请使用 useCategories() Hook。
+ * 本文件仅保留常量定义，作为数据库首次启动时的种子数据参考。
+ * 修改预置分类时，请同步更新 src/main/index.ts 中的 seedPresetCategories()。
  */
 
 export interface SubCategory {
@@ -21,7 +25,8 @@ export interface MainCategory {
   subCategories: SubCategory[]
 }
 
-export const CATEGORIES: MainCategory[] = [
+/** 预置支出分类（仅作为种子数据参考，运行时请使用 useCategories() Hook） */
+export const PRESET_EXPENSE_CATEGORIES: MainCategory[] = [
   {
     name: '餐饮饮食',
     icon: '🍜',
@@ -117,7 +122,7 @@ export const CATEGORIES: MainCategory[] = [
  * 根据一级分类名称获取其下的二级小类列表
  */
 export function getSubCategories(mainCategoryName: string): SubCategory[] {
-  const category = CATEGORIES.find((c) => c.name === mainCategoryName)
+  const category = PRESET_EXPENSE_CATEGORIES.find((c) => c.name === mainCategoryName)
   return category ? category.subCategories : []
 }
 
@@ -130,7 +135,7 @@ export function getCategoryIcon(mainCategoryName: string, subCategoryName?: stri
     const sub = subCategories.find((s) => s.name === subCategoryName)
     if (sub) return sub.icon
   }
-  const category = CATEGORIES.find((c) => c.name === mainCategoryName)
+  const category = PRESET_EXPENSE_CATEGORIES.find((c) => c.name === mainCategoryName)
   return category ? category.icon : '💰'
 }
 
@@ -138,7 +143,7 @@ export function getCategoryIcon(mainCategoryName: string, subCategoryName?: stri
  * 获取所有一级分类名称列表
  */
 export function getMainCategoryNames(): string[] {
-  return CATEGORIES.map((c) => c.name)
+  return PRESET_EXPENSE_CATEGORIES.map((c) => c.name)
 }
 
 // ==================== 收入分类 ====================
@@ -149,8 +154,8 @@ export interface IncomeCategory {
   icon: string
 }
 
-/** 收入分类（扁平列表，不分层级） */
-export const INCOME_CATEGORIES: IncomeCategory[] = [
+/** 预置收入分类（仅作为种子数据参考，运行时请使用 useCategories() Hook） */
+export const PRESET_INCOME_CATEGORIES: IncomeCategory[] = [
   { name: '工资薪水', icon: '💰' },
   { name: '奖金红包', icon: '🎁' },
   { name: '投资理财', icon: '📈' },
@@ -162,7 +167,7 @@ export const INCOME_CATEGORIES: IncomeCategory[] = [
  * 根据收入分类名称获取图标
  */
 export function getIncomeIcon(name: string): string {
-  const cat = INCOME_CATEGORIES.find((c) => c.name === name)
+  const cat = PRESET_INCOME_CATEGORIES.find((c) => c.name === name)
   return cat ? cat.icon : '💰'
 }
 
@@ -180,3 +185,17 @@ export function getRecordIcon(
   if (type === 'income') return getIncomeIcon(categoryMain)
   return getCategoryIcon(categoryMain, categorySub)
 }
+
+// ==================== 过渡期别名（组件迁移完成后将删除）====================
+
+/**
+ * @deprecated 分类数据已迁移到数据库，请使用 useCategories() Hook 获取运行时分类列表。
+ *             本常量仅保留用于种子数据参考。
+ */
+export const CATEGORIES = PRESET_EXPENSE_CATEGORIES
+
+/**
+ * @deprecated 分类数据已迁移到数据库，请使用 useCategories() Hook 获取运行时分类列表。
+ *             本常量仅保留用于种子数据参考。
+ */
+export const INCOME_CATEGORIES = PRESET_INCOME_CATEGORIES

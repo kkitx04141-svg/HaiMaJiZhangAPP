@@ -16,7 +16,7 @@ import {
 import { useStatistics } from '@/hooks/useStatistics'
 import { getCurrentMonth, formatMonth } from '@/utils/formatDate'
 import { centsToYuan } from '@/utils/formatMoney'
-import { CATEGORIES } from '@/constants/categories'
+import { useCategories } from '@/hooks/useCategories'
 
 // 饼图颜色
 const PIE_COLORS = [
@@ -26,6 +26,7 @@ const PIE_COLORS = [
 
 export default function StatisticsPage() {
   const { categoryStats, monthlyTrends, monthSummary, loading, refresh } = useStatistics()
+  const { expenseCategories } = useCategories()
   const [currentMonth, setCurrentMonth] = useState(getCurrentMonth())
 
   const goToPrevMonth = useCallback(() => {
@@ -54,7 +55,7 @@ export default function StatisticsPage() {
   const pieData = categoryStats.map((s) => ({
     name: s.category_main,
     value: s.total,
-    icon: CATEGORIES.find((c) => c.name === s.category_main)?.icon || '💰',
+    icon: expenseCategories.find((c) => c.name === s.category_main)?.icon || '💰',
   }))
 
   // 柱状图数据（月度收支对比）

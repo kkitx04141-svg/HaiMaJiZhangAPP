@@ -11,11 +11,10 @@
 
 import { useState, type FormEvent } from 'react'
 import {
-  CATEGORIES,
-  INCOME_CATEGORIES,
-  type MainCategory,
-  type IncomeCategory,
-} from '@/constants/categories'
+  useCategories,
+  type MainCategoryItem,
+  type IncomeCategoryItem,
+} from '@/hooks/useCategories'
 import { yuanToCents } from '@/utils/formatMoney'
 import { getToday } from '@/utils/formatDate'
 import type { RecordType } from '@/db/expenseRepo'
@@ -35,6 +34,9 @@ interface ExpenseFormProps {
 }
 
 export default function ExpenseForm({ onSave, onCancel }: ExpenseFormProps) {
+  // 从 Hook 获取分类数据（替代旧的 import 常量）
+  const { expenseCategories, incomeCategories } = useCategories()
+
   // 类型切换
   const [recordType, setRecordType] = useState<RecordType>('expense')
 
@@ -49,13 +51,13 @@ export default function ExpenseForm({ onSave, onCancel }: ExpenseFormProps) {
   const isExpense = recordType === 'expense'
 
   // 当前选中的大类对象（支出时才有子分类）
-  const mainCategory: MainCategory | undefined = isExpense
-    ? CATEGORIES.find((c) => c.name === selectedMain)
+  const mainCategory: MainCategoryItem | undefined = isExpense
+    ? expenseCategories.find((c) => c.name === selectedMain)
     : undefined
 
   // 当前选中的收入分类对象
-  const incomeCategory: IncomeCategory | undefined = !isExpense
-    ? INCOME_CATEGORIES.find((c) => c.name === selectedMain)
+  const incomeCategory: IncomeCategoryItem | undefined = !isExpense
+    ? incomeCategories.find((c) => c.name === selectedMain)
     : undefined
 
   // 选择大类时清空前一个小类（收入时大类即最终分类）
@@ -181,7 +183,7 @@ export default function ExpenseForm({ onSave, onCancel }: ExpenseFormProps) {
           <>
             {/* --- 支出一级大类 --- */}
             <div className="grid grid-cols-4 gap-2 mb-3">
-              {CATEGORIES.map((cat) => (
+              {expenseCategories.map((cat) => (
                 <button
                   key={cat.name}
                   type="button"
@@ -224,7 +226,7 @@ export default function ExpenseForm({ onSave, onCancel }: ExpenseFormProps) {
         ) : (
           /* --- 收入分类（扁平列表） --- */
           <div className="grid grid-cols-3 gap-2">
-            {INCOME_CATEGORIES.map((cat) => (
+            {incomeCategories.map((cat) => (
               <button
                 key={cat.name}
                 type="button"
