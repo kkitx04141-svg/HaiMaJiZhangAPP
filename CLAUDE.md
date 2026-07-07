@@ -20,10 +20,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `npm run dev` | 启动开发模式，支持热更新 |
 | `npm run build` | 编译检查（TypeScript）+ Vite 打包，输出到 `out/` |
 | `npm run preview` | 预览打包后的产物 |
+| `npm run test` | 运行所有单元测试（vitest） |
+| `npm run test:watch` | 监听模式，文件改动自动重跑测试 |
 | `npm run package:win` | 生成 Windows 安装程序 `dist/heima-accounting-*-setup-win.exe` |
 | `npm run package:mac` | 生成 Mac 安装程序 .dmg（需在 Mac 上执行） |
 
-打包前会自动执行 build，无需手动先 build 再 package。
+打包前会自动执行 build，无需手动先 build 再 package。测试框架为 vitest，配置文件 `vitest.config.ts`，测试文件位于 `src/` 下，匹配 `*.test.ts` / `*.test.tsx`。
 
 ## 技术栈
 
@@ -60,6 +62,8 @@ React 组件 → Hook (useExpenses/useBudget/useStatistics)
 | `tsconfig.node.json` | main + preload 进程的 TS 配置 |
 | `tsconfig.web.json` | renderer 进程的 TS 配置，含 `@/*` → `src/renderer/*` 路径映射 |
 | `electron.vite.config.ts` | electron-vite 构建配置，定义 main/preload/renderer 三入口和 `@` 别名 |
+| `vitest.config.ts` | 测试框架配置，定义 `@` 别名和 `*.test.ts` 匹配规则 |
+| `electron-builder.yml` | 打包配置（Windows NSIS / Mac DMG） |
 
 ### Tailwind 自定义颜色
 
@@ -189,7 +193,8 @@ HeiMa-JiZhangApp/
 │       │   └── categories.ts    # 8 大类 40 小类消费分类 + 5 种收入分类 + 图标工具函数
 │       ├── db/                  # 数据操作层（通过 IPC 调用主进程数据库）
 │       │   ├── expenseRepo.ts   # 收支 CRUD + 分类统计 + 月度趋势 + 月度摘要
-│       │   └── budgetRepo.ts    # 预算 UPSERT + 查询 + 删除
+│       │   ├── budgetRepo.ts    # 预算 UPSERT + 查询 + 删除
+│       │   └── categoryRepo.ts  # 自定义分类 CRUD
 │       ├── hooks/               # 自定义 Hook（封装 state + loading + refresh）
 │       │   ├── useExpenses.ts   # 收支列表增删查
 │       │   ├── useStatistics.ts # 分类统计 + 趋势 + 摘要
@@ -207,7 +212,30 @@ HeiMa-JiZhangApp/
 │           ├── formatMoney.ts   # 金额格式化（centsToYuan / yuanToCents）
 │           ├── formatDate.ts    # 日期格式化（getToday / getCurrentMonth / formatMonth 等）
 │           └── exportData.ts    # CSV 导出（读取全部记录 → 另存为对话框 → 写入文件）
+│       ├── *.test.ts             # 单元测试文件，与源文件同目录（vitest）
 ```
+
+## 自定义代理与技能
+
+`.claude/` 目录下定义了专用子代理和技能，用于质量门禁和开发辅助：
+
+### 子代理（`agents/`）
+
+| 代理 | 文件 | 用途 |
+|------|------|------|
+| gitcommit-agent | `agents/gitcommit-agent.md` | Git 提交门禁：并行跑测试 + 质量检查，全部通过后自动存档推送 |
+| quality-engineer | `agents/quality-engineer.md` | 代码质量检查：安全审计、注释检查、代码规范 |
+| tester | `agents/tester.md` | 单元测试：编写和执行测试，输出测试报告 |
+
+### 技能（`skills/`）
+
+| 技能 | 文件 | 用途 |
+|------|------|------|
+| unit-test | `skills/unit-test/SKILL.md` | 单元测试驱动 |
+| comments-check | `skills/comments-check/SKILL.md` | 注释完整性检查 |
+| security-audit | `skills/security-audit/SKILL.md` | 安全审计 |
+| run-app | `skills/run-app/SKILL.md` | 一键启动应用 |
+| rebuild-app | `skills/rebuild-app/SKILL.md` | 重新编译并启动 |
 
 ## 已知问题与解决
 
