@@ -32,7 +32,7 @@ export interface ExpenseRecord {
 }
 
 /**
- * 新增一笔支出
+ * 新增一笔收支记录（支出或收入，由 data.type 决定）
  * @returns 新插入记录的 id
  */
 export async function addExpense(data: ExpenseInput): Promise<number> {
@@ -45,9 +45,10 @@ export async function addExpense(data: ExpenseInput): Promise<number> {
 }
 
 /**
- * 查询支出列表
+ * 查询收支记录列表
  * @param yearMonth 可选，按月筛选，格式 "YYYY-MM"
- * @returns 按日期倒序排列的支出记录
+ * @param type 可选，按类型筛选（'expense' 或 'income'）
+ * @returns 按日期倒序排列的记录
  */
 export async function getExpenses(
   yearMonth?: string,
@@ -76,14 +77,14 @@ export async function getExpenses(
 }
 
 /**
- * 删除一笔支出
+ * 删除一笔收支记录
  */
 export async function deleteExpense(id: number): Promise<void> {
   await window.electronAPI.db.run('DELETE FROM expenses WHERE id = ?', [id])
 }
 
 /**
- * 根据 id 获取单条支出记录
+ * 根据 id 获取单条收支记录
  */
 export async function getExpenseById(id: number): Promise<ExpenseRecord | null> {
   const rows = await window.electronAPI.db.query(

@@ -21,6 +21,11 @@ import type { RecordType } from '@/db/expenseRepo'
 
 type FilterType = 'all' | 'expense' | 'income'
 
+/** 预算使用率超过 70% 时黄色预警 */
+const BUDGET_WARNING_THRESHOLD = 70
+/** 预算使用率超过 90% 时红色警告 */
+const BUDGET_DANGER_THRESHOLD = 90
+
 const FILTER_OPTIONS: Array<{ key: FilterType; label: string }> = [
   { key: 'all', label: '全部' },
   { key: 'expense', label: '支出' },
@@ -194,10 +199,11 @@ export default function HomePage() {
 function BudgetBar({ spent, budget }: { spent: number; budget: number }) {
   const percent = Math.min(Math.round((spent / budget) * 100), 100)
 
+  // 预算使用率阈值：超过 70% 黄色预警，超过 90% 红色警告
   const barColor =
-    percent < 70 ? 'bg-emerald-500' : percent < 90 ? 'bg-amber-500' : 'bg-red-500'
+    percent < BUDGET_WARNING_THRESHOLD ? 'bg-emerald-500' : percent < BUDGET_DANGER_THRESHOLD ? 'bg-amber-500' : 'bg-red-500'
   const textColor =
-    percent < 70 ? 'text-emerald-700' : percent < 90 ? 'text-amber-700' : 'text-red-700'
+    percent < BUDGET_WARNING_THRESHOLD ? 'text-emerald-700' : percent < BUDGET_DANGER_THRESHOLD ? 'text-amber-700' : 'text-red-700'
 
   return (
     <div className="px-6 py-3 border-b border-gray-100">
@@ -214,9 +220,9 @@ function BudgetBar({ spent, budget }: { spent: number; budget: number }) {
         />
       </div>
       <p className={`text-xs mt-1 ${textColor}`}>
-        {percent >= 90
+        {percent >= BUDGET_DANGER_THRESHOLD
           ? `⚠️ 已使用 ${percent}%，注意控制支出！`
-          : percent >= 70
+          : percent >= BUDGET_WARNING_THRESHOLD
           ? `已使用 ${percent}%，接近预算上限`
           : `已使用 ${percent}%`}
       </p>

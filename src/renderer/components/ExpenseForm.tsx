@@ -19,6 +19,9 @@ import { yuanToCents } from '@/utils/formatMoney'
 import { getToday } from '@/utils/formatDate'
 import type { RecordType } from '@/db/expenseRepo'
 
+/** 备注输入框最大字符数 */
+const NOTE_MAX_LENGTH = 50
+
 interface ExpenseFormProps {
   /** 保存回调，传入填好的数据 */
   onSave: (data: {
@@ -272,7 +275,7 @@ export default function ExpenseForm({ onSave, onCancel }: ExpenseFormProps) {
             value={note}
             onChange={(e) => setNote(e.target.value)}
             placeholder={isExpense ? '如：食堂午餐' : '如：工资到账'}
-            maxLength={50}
+            maxLength={NOTE_MAX_LENGTH}
             className="w-full px-3 py-2 text-sm bg-gray-50 rounded-xl
                        border-2 border-transparent focus:bg-white
                        focus:border-primary-400 focus:outline-none
