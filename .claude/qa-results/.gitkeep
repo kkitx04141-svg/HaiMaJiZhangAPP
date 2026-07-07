@@ -1,0 +1,3 @@
+# 质量检查通行证目录
+# 两个 agent（tester 和 quality-engineer）完成任务后会在这里写入标记文件
+# gate-check.js 会读取这些文件来判断是否放行 git commit

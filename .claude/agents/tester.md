@@ -40,6 +40,37 @@ model: sonnet
 4. 如果测试失败，分析是测试写错还是源码有 bug
 5. 用中文和用户沟通
 
+## 通行证：输出标记文件
+
+**每次**测试跑完后，无论通过还是失败，都必须将结果写入 `.claude/qa-results/test-result.json`。
+
+### 标记文件格式
+
+```json
+{
+  "passed": true,
+  "timestamp": "2026-07-07T10:30:00.000Z",
+  "stats": { "total": 7, "passed": 7, "failed": 0 },
+  "summary": "所有测试全部通过 ✅"
+}
+```
+
+### 判定规则
+
+| 字段 | 值 | 说明 |
+|------|-----|------|
+| `passed` | `true` | 所有测试用例全部通过 |
+| `passed` | `false` | 至少 1 个测试失败 |
+| `timestamp` | ISO 8601 格式 | `new Date().toISOString()` |
+| `stats.total` | 数字 | 总测试用例数 |
+| `stats.passed` | 数字 | 通过的测试用例数 |
+| `stats.failed` | 数字 | 失败的测试用例数 |
+| `summary` | 字符串 | 一句话总结 |
+
+### 为什么写这个文件
+
+这个文件是"通行证"——gitcommit-agent 和 gate-check.js 会读取它来判断是否允许 git 提交。不写这个文件，git 提交会被 Hook 拦截。
+
 ## 禁止事项
 
 - ❌ 不要修改被测源码来"凑"测试通过

@@ -40,10 +40,25 @@
       "mcp__context7__query-docs",
       "Bash(du -sh node_modules/electron/dist/electron.exe)",
       "Bash(file node_modules/electron/dist/electron.exe)",
-      "Bash(ls -la node_modules/electron/dist/electron.exe)"
+      "Bash(ls -la node_modules/electron/dist/electron.exe)",
+      "Bash(git *)",
+      "Bash(node .claude/scripts/gate-check.js)"
     ],
     "additionalDirectories": [
       "D:\\Vibe Coding\\HeiMa-JiZhangApp"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/scripts/gate-check.js"
+          }
+        ]
+      }
     ]
   }
 }
