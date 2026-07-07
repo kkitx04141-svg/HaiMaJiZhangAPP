@@ -1,9 +1,0 @@
-{
-  "passed": true,
-  "timestamp": "2026-07-07T06:37:00.000Z",
-  "security": "B",
-  "comments": "⚠️ 需改进",
-  "codeStyle": "⚠️ 需改进",
-  "score": 70,
-  "summary": "综合评分 70/100，安全审计 B 级，注释和代码规范均需改进，无阻断性问题"
-}

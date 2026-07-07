@@ -1,6 +1,0 @@
-{
-  "passed": true,
-  "timestamp": "2026-07-07T06:34:15.000Z",
-  "stats": { "total": 93, "passed": 93, "failed": 0 },
-  "summary": "所有 7 个测试文件、93 个测试用例全部通过"
-}
