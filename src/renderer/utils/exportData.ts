@@ -12,7 +12,7 @@ import { centsToYuan } from '@/utils/formatMoney'
  * 将记录列表转为 CSV 字符串
  * 第一行为表头，后续行为数据
  */
-function recordsToCsv(records: ExpenseRecord[]): string {
+export function recordsToCsv(records: ExpenseRecord[]): string {
   // BOM 头确保 Excel 正确识别 UTF-8 中文
   const header = '﻿日期,类型,一级分类,二级分类,金额(元),备注'
   const rows = records.map((r) => {

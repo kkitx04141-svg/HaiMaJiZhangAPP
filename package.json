@@ -11,6 +11,8 @@
     "preview": "cross-env ELECTRON_RUN_AS_NODE= electron-vite preview",
     "package:win": "cross-env ELECTRON_RUN_AS_NODE= CSC_IDENTITY_AUTO_DISCOVERY=false electron-vite build && electron-builder --win",
     "package:mac": "cross-env ELECTRON_RUN_AS_NODE= CSC_IDENTITY_AUTO_DISCOVERY=false electron-vite build && electron-builder --mac",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "package:all": "cross-env ELECTRON_RUN_AS_NODE= CSC_IDENTITY_AUTO_DISCOVERY=false electron-vite build && electron-builder --win --mac"
   },
   "dependencies": {
@@ -31,6 +33,7 @@
     "electron-vite": "^2.3.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.16",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.10"
   }
 }
