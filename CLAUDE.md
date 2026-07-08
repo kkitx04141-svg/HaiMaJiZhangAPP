@@ -236,6 +236,7 @@ HeiMa-JiZhangApp/
 | security-audit | `skills/security-audit/SKILL.md` | 安全审计 |
 | run-app | `skills/run-app/SKILL.md` | 一键启动应用 |
 | rebuild-app | `skills/rebuild-app/SKILL.md` | 重新编译并启动 |
+| write-readme | `skills/write-readme/SKILL.md` | 自动生成适合小白阅读的 README |
 
 ## 已知问题与解决
 
